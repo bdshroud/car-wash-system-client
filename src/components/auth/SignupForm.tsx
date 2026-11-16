@@ -56,8 +56,6 @@ const SignupForm = () => {
       return;
     }
 
-    const payload = { name, email, password, image };
-
     setIsLoading(true);
     try {
       const { data, error } = await signUp.email({
@@ -75,9 +73,7 @@ const SignupForm = () => {
         title: `Hello ${data.user?.name}, Account created`,
         description: "Your account has been created successfully.",
       });
-      router.push("/")
-      console.log({ data, error });
-      //   console.log("Sign up submitted:", { ...payload, password: "[hidden]" });
+      router.push("/");
     } catch {
       setError("Something went wrong. Please try again.");
     } finally {

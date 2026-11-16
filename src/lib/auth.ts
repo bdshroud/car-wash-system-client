@@ -4,13 +4,16 @@ import { mongodbAdapter } from "@better-auth/mongo-adapter";
 import { BRANCHES } from "./branches";
 
 
-const client = new MongoClient(process.env.DB_URI as string);
+const dbUri =
+  process.env.DB_URI || "mongodb://127.0.0.1:27017/ph-car-wash-system";
+const client = new MongoClient(dbUri);
 const db = client.db("ph-car-wash-system");
 
-
-
 export const auth = betterAuth({
-
+  secret:
+    process.env.BETTER_AUTH_SECRET ||
+    "default_development_auth_secret_must_be_overridden_in_production",
+  baseURL: process.env.BETTER_AUTH_URL || "http://localhost:3000",
   database: mongodbAdapter(db, {
     client,
   }),

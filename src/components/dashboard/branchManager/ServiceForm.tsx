@@ -37,10 +37,6 @@ const ServiceForm = ({ onSuccess }: ServiceFormProps) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
 
-    const data = Object.fromEntries(formData.entries());
-
-    console.log(data, "data");
-
     startTransition(async () => {
       try {
         const response = await createService(formData);
@@ -60,8 +56,6 @@ const ServiceForm = ({ onSuccess }: ServiceFormProps) => {
   };
 
   const errors = result?.errors ?? {};
-
-  console.log(user, "user");
 
   return (
     <form onSubmit={handleSubmit}>

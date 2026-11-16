@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { CarFront } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { TService } from "@/types";
@@ -10,17 +11,29 @@ type ServiceCardProps = {
 
 // One service shown as a card on the public services page.
 const ServiceCard = ({ service }: ServiceCardProps) => {
+  const hasValidImage =
+    service.image &&
+    (service.image.startsWith("http://") ||
+      service.image.startsWith("https://") ||
+      service.image.startsWith("/"));
+
   return (
     <Card>
       {/* A box with a fixed height, so every card looks the same. */}
       <div className="relative h-48 w-full bg-muted">
-        <Image
-          src={service.image}
-          alt={service.name}
-          fill
-          unoptimized
-          className="object-cover"
-        />
+        {hasValidImage ? (
+          <Image
+            src={service.image}
+            alt={service.name}
+            fill
+            unoptimized
+            className="object-cover"
+          />
+        ) : (
+          <div className="grid h-full w-full place-items-center bg-[#15295e]/5 text-[#15295e]">
+            <CarFront className="size-12 opacity-40" />
+          </div>
+        )}
       </div>
 
       <CardHeader>

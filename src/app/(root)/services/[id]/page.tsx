@@ -1,8 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { CarFront } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { getServiceById } from "@/lib/api/services";
+
+export const dynamic = "force-dynamic";
 
 // Details page for one service. Example address: /services/65f1a2b3c4d5e6f7a8b9c0d1
 
@@ -21,6 +24,12 @@ export default async function ServiceDetailsPage({
     notFound();
   }
 
+  const hasValidImage =
+    service.image &&
+    (service.image.startsWith("http://") ||
+      service.image.startsWith("https://") ||
+      service.image.startsWith("/"));
+
   return (
     <main className="mx-auto max-w-4xl px-4 py-10">
       <Link
@@ -32,13 +41,19 @@ export default async function ServiceDetailsPage({
 
       <div className="mt-6 grid gap-8 md:grid-cols-2">
         <div className="relative h-72 w-full overflow-hidden rounded-xl bg-muted">
-          <Image
-            src={service.image}
-            alt={service.name}
-            fill
-            unoptimized
-            className="object-cover"
-          />
+          {hasValidImage ? (
+            <Image
+              src={service.image}
+              alt={service.name}
+              fill
+              unoptimized
+              className="object-cover"
+            />
+          ) : (
+            <div className="grid h-full w-full place-items-center bg-[#15295e]/5 text-[#15295e]">
+              <CarFront className="size-16 opacity-40" />
+            </div>
+          )}
         </div>
 
         <div className="space-y-4">

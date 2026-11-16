@@ -44,7 +44,7 @@ const SigninForm = () => {
     try {
       const { data, error } = await signIn.email(payload);
       if (error) return setError(error.message ?? "Invalid email or password.");
-      console.log({ data, error });
+
       if (data?.user) {
         toast.add({
           title: `Hello ${data.user?.name}, welcome back!`,
@@ -52,7 +52,6 @@ const SigninForm = () => {
         });
         router.push("/");
       }
-      console.log("Sign in submitted:", { ...payload, password: "[hidden]" });
     } catch {
       setError("Something went wrong. Please try again.");
     } finally {

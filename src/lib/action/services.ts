@@ -46,11 +46,22 @@ async function saveService(formData: FormData): Promise<TServiceFormState> {
   }
 
   // 3. Send to Express. createdBy comes from the verified session, not from the form.
+  // If the caller is a branchManager, enforce their assigned branch.
+  const branchToSave =
+    session.user.role === "branchManager" && session.user.branch
+      ? session.user.branch
+      : data.branch;
+
   try {
     const res = await fetch(`${API_BASE_URL}/services`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...data, createdBy: session.user.email }),
+      body: JSON.stringify({
+        ...data,
+        branch: branchToSave,
+        createdBy: session.user.id,
+        creatorEmail: session.user.email,
+      }),
       cache: "no-store",
     });
 

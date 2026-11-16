@@ -1,7 +1,6 @@
 import Link from "next/link";
 import type { SVGProps } from "react";
 import { CarFront, Droplets, Phone, UserRound } from "lucide-react";
-import { authClient } from "@/lib/auth-client";
 import { headers } from "next/headers";
 import {
   DropdownMenu,
@@ -23,10 +22,8 @@ const WhatsAppIcon = (props: SVGProps<SVGSVGElement>) => (
 );
 
 const Header = async () => {
-  const { data: session, error } = await authClient.getSession({
-    fetchOptions: {
-      headers: await headers(),
-    },
+  const session = await auth.api.getSession({
+    headers: await headers(),
   });
 
   return (
@@ -66,26 +63,25 @@ const Header = async () => {
 
           {session ? (
             <DropdownMenu>
-              <DropdownMenuTrigger>
-                <button
-                  type="button"
-                  aria-label="Open account menu"
-                  className="flex h-full items-center gap-2 px-2 transition-colors hover:text-[#ffc107]"
-                >
-                  <UserRound className="size-4" />
-                  <span className="hidden max-w-28 truncate sm:inline">
-                    {session.user?.name || "Account"}
-                  </span>
-                </button>
+              <DropdownMenuTrigger
+                aria-label="Open account menu"
+                className="flex h-full items-center gap-2 px-2 transition-colors hover:text-[#ffc107]"
+              >
+                <UserRound className="size-4" />
+                <span className="hidden max-w-28 truncate sm:inline">
+                  {session.user?.name || "Account"}
+                </span>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem>
-                  <Link href={`/dashboard/${session.user?.role || "user"}`}>
-                    Dashboard
-                  </Link>
+                <DropdownMenuItem
+                  render={<Link href={`/dashboard/${session.user?.role || "user"}`} />}
+                >
+                  Dashboard
                 </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Link href="/profile">My profile</Link>
+                <DropdownMenuItem
+                  render={<Link href={`/dashboard/${session.user?.role || "user"}/profile`} />}
+                >
+                  My profile
                 </DropdownMenuItem>
                 <DropdownMenuItem>
                   <SignoutCompo />

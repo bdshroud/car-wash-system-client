@@ -1,11 +1,10 @@
 import React from "react";
 import { cookies, headers } from "next/headers";
+import { redirect } from "next/navigation";
 import DashboardSidebar from "@/components/dashboard/shared/DashboardSidebar";
-import { Separator } from "@/components/ui/separator";
 import {
   SidebarInset,
   SidebarProvider,
-  SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { auth } from "@/lib/auth";
@@ -17,17 +16,19 @@ const DashboardLayout = async ({ children }: { children: React.ReactNode }) => {
     auth.api.getSession({ headers: await headers() }),
   ]);
 
+  if (!session) {
+    redirect("/signin");
+  }
+
   // The shadcn sidebar stores its open/collapsed state in this cookie.
   const defaultOpen = cookieStore.get("sidebar_state")?.value !== "false";
 
-  const user = session
-    ? {
-        name: session.user.name,
-        email: session.user.email,
-        image: session.user.image,
-        role: session.user.role,
-      }
-    : null;
+  const user = {
+    name: session.user.name,
+    email: session.user.email,
+    image: session.user.image,
+    role: session.user.role,
+  };
 
   return (
     <TooltipProvider>
